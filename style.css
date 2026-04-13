@@ -65,9 +65,9 @@ header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 12px;
-  min-height: 72px;
-  padding: calc(10px + env(safe-area-inset-top)) 18px 10px;
+  gap: 10px;
+  min-height: 62px;
+  padding: calc(8px + env(safe-area-inset-top)) 16px 8px;
   background: rgba(16, 16, 16, .92);
   border-bottom: 1px solid var(--line-soft);
   backdrop-filter: blur(14px);
@@ -83,12 +83,12 @@ header h1 {
   display: flex;
   align-items: center;
   min-width: 0;
-  gap: 12px;
+  gap: 10px;
 }
 
 .brand-icon {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   flex: 0 0 auto;
   border-radius: var(--radius);
 }
@@ -96,7 +96,7 @@ header h1 {
 .brand-title {
   min-width: 0;
   color: var(--text);
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
   line-height: 1.05;
   text-wrap: balance;
@@ -104,8 +104,8 @@ header h1 {
 
 #themeToggle {
   justify-self: end;
-  min-height: 40px;
-  padding: 0 12px;
+  min-height: 36px;
+  padding: 0 10px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: transparent;
@@ -117,9 +117,9 @@ header h1 {
 }
 
 main {
-  width: min(980px, 100%);
+  width: min(900px, 100%);
   margin: 0 auto;
-  padding: 18px;
+  padding: 12px;
 }
 
 form,
@@ -127,7 +127,7 @@ form,
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--surface);
-  box-shadow: var(--shadow);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .2);
 }
 
 form {
@@ -138,10 +138,10 @@ form {
 
 fieldset {
   margin: 0;
-  padding: 18px;
+  padding: 14px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 10px 12px;
   border: 0;
   border-bottom: 1px solid var(--line-soft);
 }
@@ -153,7 +153,7 @@ fieldset:last-of-type {
 legend {
   grid-column: 1 / -1;
   width: 100%;
-  padding: 0 0 2px;
+  padding: 0;
   color: var(--accent);
   font-size: 12px;
   font-weight: 800;
@@ -163,7 +163,7 @@ legend {
 
 label {
   display: grid;
-  gap: 8px;
+  gap: 6px;
   min-width: 0;
   margin: 0;
   color: var(--muted);
@@ -183,8 +183,8 @@ input,
 select,
 textarea {
   width: 100%;
-  min-height: 46px;
-  padding: 0 12px;
+  min-height: 42px;
+  padding: 0 10px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--bg);
@@ -237,7 +237,7 @@ button:focus-visible {
 
 .form-actions {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  padding: 18px;
+  padding: 14px;
   border-top: 1px solid var(--line-soft);
   background: var(--surface-strong);
 }
@@ -245,17 +245,19 @@ button:focus-visible {
 .iac-actions {
   grid-column: 1 / -1;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
 }
 
 #actions {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-top: 14px;
+  margin-top: 10px;
+  gap: 8px;
 }
 
 button {
   appearance: none;
-  min-height: 44px;
-  padding: 0 14px;
+  min-height: 40px;
+  padding: 0 12px;
   border: 1px solid transparent;
   border-radius: var(--radius);
   background: var(--accent);
@@ -291,8 +293,8 @@ button.secondary,
 }
 
 #output {
-  margin-top: 18px;
-  padding: 20px;
+  margin-top: 12px;
+  padding: 16px;
   overflow: hidden;
   background: var(--surface);
 }
@@ -301,11 +303,11 @@ button.secondary,
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 0 0 14px;
-  padding-bottom: 14px;
+  margin: 0 0 10px;
+  padding-bottom: 10px;
   border-bottom: 2px solid var(--accent);
   color: var(--text);
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
   text-wrap: balance;
 }
@@ -322,10 +324,10 @@ button.secondary,
 #output .row {
   display: grid;
   grid-template-columns: minmax(130px, 1fr) minmax(0, 1.2fr);
-  gap: 14px;
+  gap: 10px;
   align-items: baseline;
   min-width: 0;
-  padding: 8px 0;
+  padding: 6px 0;
   border-bottom: 1px solid var(--line-soft);
 }
 
@@ -349,7 +351,7 @@ button.secondary,
 }
 
 #output .hr {
-  height: 10px;
+  height: 8px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -369,8 +371,8 @@ button.secondary,
 .row.accent-pay,
 .row.accent-doplatek,
 .row.accent-grand {
-  margin-top: 8px;
-  padding: 12px;
+  margin-top: 4px;
+  padding: 10px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--surface-strong);
@@ -395,6 +397,16 @@ button.secondary,
   color: var(--subtle) !important;
 }
 
+@media (min-width: 860px) {
+  fieldset {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  fieldset:nth-of-type(3) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 720px) {
   header {
     grid-template-columns: 1fr;
@@ -406,12 +418,12 @@ button.secondary,
   }
 
   main {
-    padding: 12px;
+    padding: 10px;
   }
 
   fieldset {
     grid-template-columns: 1fr;
-    padding: 16px;
+    padding: 12px;
   }
 
   .form-actions,
@@ -421,7 +433,7 @@ button.secondary,
   }
 
   #output {
-    padding: 16px;
+    padding: 12px;
   }
 
   #output .row {
