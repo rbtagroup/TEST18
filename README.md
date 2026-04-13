@@ -9,6 +9,7 @@ Jednostránková PWA pro výčetku řidiče. Připraveno pro GitHub Pages / Netl
 - Sdílení textu, sdílení obrázku a export PDF.
 - PWA manifest a service worker s cache verzovaných assetů.
 - Reset a „Nová směna“ zachovává jméno řidiče.
+- Mobilní rozložení pro iOS Safari a Android Chrome včetně safe-area okrajů.
 
 ## Použití lokálně
 Stačí otevřít `index.html` v prohlížeči. Pro PWA a SW je ideální malý server (např. `npx serve`).
@@ -20,6 +21,7 @@ Stačí otevřít `index.html` v prohlížeči. Pro PWA a SW je ideální malý 
 
 ## Poznámky
 - Service Worker má vlastní verzi cache a cacheuje stejné verzované assety, které načítá HTML.
+- Po nasazení nové verze na telefonu pomůže jednorázové úplné zavření a znovuotevření aplikace, aby si PWA převzala novou cache.
 - Data zůstávají v prohlížeči. IAC jízdy se vážou k aktuálnímu dni a reset/nová směna je smaže.
 
 **Kontakt:** Pokud chcete rozšířit o přihlášení řidičů, exporty XLSX, nebo napojení na účetnictví, kód je připraven na modulární rozšíření v `app.js`.

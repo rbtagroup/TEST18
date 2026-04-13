@@ -1,18 +1,24 @@
-const CACHE_NAME = "rb-taxi-cache-v20-20260413";
-const ASSETS = [
+const CACHE_NAME = "rb-taxi-cache-v21-20260413-mobile";
+const CORE_ASSETS = [
   "./",
   "./index.html",
-  "./style.css?v=v14_20250829",
-  "./app.js?v=v19_1756477090",
+  "./style.css?v=v21_20260413_mobile",
+  "./app.js?v=v21_20260413_mobile",
   "./icon-192.png",
   "./icon-512.png",
   "./apple-touch-icon.png",
   "./manifest.json"
 ];
+const OPTIONAL_ASSETS = [
+  "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+  "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+];
 
 self.addEventListener("install", event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then(cache =>
+      cache.addAll(CORE_ASSETS).then(() => cache.addAll(OPTIONAL_ASSETS).catch(() => undefined))
+    )
   );
   self.skipWaiting();
 });
@@ -31,7 +37,8 @@ self.addEventListener("fetch", event => {
   if (request.method !== "GET") return;
 
   const url = new URL(request.url);
-  if (url.origin !== self.location.origin) return;
+  const isOptionalAsset = OPTIONAL_ASSETS.includes(request.url);
+  if (url.origin !== self.location.origin && !isOptionalAsset) return;
 
   if (request.mode === "navigate") {
     event.respondWith(

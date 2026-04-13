@@ -71,9 +71,27 @@ document.addEventListener("DOMContentLoaded", () => {
   function getNumber(id) {
     const el = document.getElementById(id);
     if (!el) return 0;
-    const raw = (el.value || "").trim().replace(",", ".");
+    const raw = (el.value || "").trim().replace(/\s/g, "").replace(",", ".");
     const n = parseFloat(raw);
     return isNaN(n) ? 0 : n;
+  }
+  function canvasToBlob(canvas) {
+    return new Promise((resolve, reject) => {
+      if (canvas.toBlob) {
+        canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("Nepodařilo se vytvořit obrázek.")), "image/png");
+        return;
+      }
+      try {
+        const dataUrl = canvas.toDataURL("image/png");
+        const parts = dataUrl.split(",");
+        const binary = atob(parts[1]);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+        resolve(new Blob([bytes], { type: "image/png" }));
+      } catch (err) {
+        reject(err);
+      }
+    });
   }
   function escapeHtml(value) {
     return String(value).replace(/[&<>"']/g, (char) => ({
@@ -234,44 +252,39 @@ try {
   if (!btn || !output) return;
   btn.addEventListener('click', async () => {
     try {
+      if (!window.html2canvas) {
+        alert("Export obrázku není dostupný. Zkontrolujte připojení a načtěte aplikaci znovu.");
+        return;
+      }
       const scale = Math.max(2, Math.floor(window.devicePixelRatio || 2));
       const canvas = await html2canvas(output, { scale, backgroundColor: null, useCORS: true });
-      await new Promise((resolve, reject) => {
-        canvas.toBlob(async (blob) => {
-          try {
-            if (!blob) return reject(new Error("Nepodařilo se vytvořit obrázek."));
-            const file = new File([blob], "vypocet-vycetky.png", { type: "image/png" });
+      const blob = await canvasToBlob(canvas);
 
-            // 1) Native share with file (https / supported UA)
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-              await navigator.share({ files: [file], title: "Výčetka řidiče", text: "Výčetka řidiče (PNG)" });
-              return resolve();
-            }
+      // 1) Native share with file (https / supported UA)
+      const file = window.File ? new File([blob], "vypocet-vycetky.png", { type: "image/png" }) : null;
+      if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: "Výčetka řidiče", text: "Výčetka řidiče (PNG)" });
+        return;
+      }
 
-            // 2) Clipboard as image (some Chromium builds)
-            if (navigator.clipboard && window.ClipboardItem) {
-              try {
-                await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
-                alert("Obrázek výčetky byl zkopírován do schránky.");
-                return resolve();
-              } catch(_e) {}
-            }
+      // 2) Clipboard as image (some Chromium builds)
+      if (navigator.clipboard && window.ClipboardItem) {
+        try {
+          await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+          alert("Obrázek výčetky byl zkopírován do schránky.");
+          return;
+        } catch(_e) {}
+      }
 
-            // 3) Download fallback
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "vypocet-vycetky.png";
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            URL.revokeObjectURL(url);
-            resolve();
-          } catch(err) {
-            reject(err);
-          }
-        }, "image/png");
-      });
+      // 3) Download fallback
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "vypocet-vycetky.png";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (e) {
       alert("Sdílení obrázku selhalo: " + (e && e.message ? e.message : e));
     }
@@ -319,6 +332,7 @@ try {
   if (pdfBtn) pdfBtn.addEventListener("click", () => {
     const node = output;
     if (!node || node.classList.contains("hidden")) { alert("Nejprve vypočítejte výčetku."); return; }
+    if (!window.html2canvas || !window.jspdf) { alert("Export PDF není dostupný. Zkontrolujte připojení a načtěte aplikaci znovu."); return; }
     html2canvas(node, { scale: 2, useCORS: true }).then(canvas => {
       const img = canvas.toDataURL("image/png");
       const { jsPDF } = window.jspdf || {};
@@ -336,7 +350,7 @@ try {
   // === SERVICE WORKER (https only) ===
   if ((location.protocol.startsWith("http")) && "serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("service-worker.js?v=v20_20260413").catch(console.warn);
+      navigator.serviceWorker.register("service-worker.js?v=v21_20260413_mobile").catch(console.warn);
     });
   }
 });
